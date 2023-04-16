@@ -24,7 +24,7 @@ pipeline{
                 sh 'mvn checkstyle:checkstyle'
             }
         }
-        stage('SonarQube Analysis'){
+        stage('Sonarqube Analysis'){
             steps{
                 script{
                     withSonarQubeEnv(credentialsId: 'sonar-api-key') {
