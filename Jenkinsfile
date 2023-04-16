@@ -42,12 +42,14 @@ pipeline{
         steps{
             script{
 
+                    def readPomVersion = readMavenPom file: 'pom.xml' 
+                    def nexusRepo = readPomVersion.version.endsWith("SNAPSHOT") ? "vprofile-app-snapshot" : "realease-vprofileapp"
                 nexusArtifactUploader artifacts: 
             [
                 [
                     artifactId: 'vprofile', 
                     classifier: '', 
-                    file: 'target/vprofile-1.0.1.war', 
+                    file: 'target/vprofile-1.0.1-SNAPSHOT.war', 
                     type: 'war']], 
 
                         credentialsId: 'nexus-auth', 
@@ -55,8 +57,18 @@ pipeline{
                         nexusUrl: '192.168.56.11:8081', 
                         nexusVersion: 'nexus3', 
                         protocol: 'http', 
-                        repository: 'realease-vprofileapp', 
-                        version: '1.0.1'
+                        repository: nexusRepo, 
+                        version: "${readPomVersion.version}"
+            }
+        }
+      }
+      stage('Docker build'){
+        steps{
+            script{
+
+                    sh 'docker build -t $JOB_NAME:v1.$BUILD_ID .'
+                    sh 'docker tag image $JOB_NAME:v1.$BUILD_ID ppraise01/$JOB_NAME:v1.$BUILD_ID'
+                    sh 'docker tag image $JOB_NAME:v1.$BUILD_ID ppraise01/$JOB_NAME:latest'
             }
         }
       }
