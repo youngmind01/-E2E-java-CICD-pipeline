@@ -38,5 +38,27 @@ pipeline{
             sh 'mvn clean install'
         }
       }
+      stage('Artifact Nexus-upload'){
+        steps{
+            script{
+
+                nexusArtifactUploader artifacts: 
+            [
+                [
+                    artifactId: 'vprofile', 
+                    classifier: '', 
+                    file: 'target/VProfile-1.0.1.war', 
+                    type: 'war']], 
+
+                        credentialsId: 'nexus-auth', 
+                        groupId: 'com.visualpathit', 
+                        nexusUrl: '192.168.56.11:8081', 
+                        nexusVersion: 'nexus3', 
+                        protocol: 'http', 
+                        repository: 'realease-vprofileapp', 
+                        version: '1.0.1'
+            }
+        }
+      }
     }
 }
