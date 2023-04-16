@@ -19,5 +19,18 @@ pipeline{
                 sh 'mvn verify -DskipUnitTests'
             }
         }
+        stage('checkstyle analysis'){
+            steps{
+                sh 'mvn checkstyle:checkstyle'
+            }
+        }
+        stage('SonarQube Analysis'){
+            steps{
+                script{
+                    withSonarQubeEnv(credentialsId: 'sonar-api-key') {
+                    sh 'mvn clean package sonar:sonar'
+                }
+            }
+        }
     }
 }
