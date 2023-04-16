@@ -47,7 +47,7 @@ pipeline{
                 [
                     artifactId: 'vprofile', 
                     classifier: '', 
-                    file: 'target/VProfile-1.0.1.war', 
+                    file: 'target/vprofile-1.0.1.war', 
                     type: 'war']], 
 
                         credentialsId: 'nexus-auth', 
